@@ -1,0 +1,9 @@
+/sapms/settings_local.py
+*.sqlite3
+__pycache__/*
+.idea/*
+*.pyc
+*.cpython-39
+/.idea/
+*.DS_Store
+*.env
