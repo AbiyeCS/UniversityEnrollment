@@ -1,0 +1,54 @@
+{% extends 'student_panel/student_base.html' %}
+{% block content %}
+    <div class="page-heading">
+        <h3>List of Universities</h3>
+    </div>
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    List of Universities you want check out
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="table1">
+                        <thead>
+                            <tr>
+                                <th>University name</th>
+                                <th>Address</th>
+                                <th>Application deadline</th>
+                                <th>Site Url</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for uni in universities %}
+                            <tr>
+                                <td>{{ uni.name }}</td>
+                                <td>{{ uni.address }}</td>
+                                <td>{{ uni.get_last_app_date }}</td>
+                                <td>{{ uni.site_url }}</td>
+                                <td>
+                                    <a href="{% url 'university_detail' uni.id  %}" class="btn btn-primary">Explore More</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td>No data available</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+{% endblock content %}

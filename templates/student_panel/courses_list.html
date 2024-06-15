@@ -1,0 +1,57 @@
+{% extends 'student_panel/student_base.html' %}
+{% block content %}
+    <div class="page-heading">
+        <h3>List of Courses</h3>
+    </div>
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    List of Courses you want check out
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="table1">
+                        <thead>
+                            <tr>
+                                <th>Course name</th>
+                                <th>University name</th>
+                                <th>Fee</th>
+                                <th>Taught language</th>
+                                <th>Application deadline</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for course in courses %}
+                            <tr>
+                                <td>{{ course.name }}</td>
+                                <td>{{ course.university.name }}</td>
+                                <td>{% for fee in course.fee.all %}{{ fee.name }}:{{ fee.amount }}<br>{% endfor %}</td>
+                                <td>{{ course.taught_language }}</td>
+                                <td>{{ course.university.get_last_app_date }}</td>
+                                <td>
+                                    <a href="{% url 'application_create' course.id %}" class="btn btn-primary">Apply</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td>No data available</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+{% endblock content %}

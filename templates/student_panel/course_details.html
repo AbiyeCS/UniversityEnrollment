@@ -1,0 +1,24 @@
+{% extends 'student_panel/student_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="page-heading">
+        <h3>{{ course.name }} Detail</h3>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                <h3>{{ course.name }}</h3>
+                <h3>{{ course.short_description }}</h3>
+                {% for des in course.discipline.all %}
+                <h6>{{ des.name }}</h6>
+                {% endfor %}
+                {% for fee in course.fee.all %}
+                <h6>{{ fee.name }}:${{ fee.amount }}</h6>
+                {% endfor %}
+                <h6>{{ course.requirements }}</h6>
+                <h6>{{ course.taught_language }}</h6>
+                <a href="{% url 'application_create' course.id %}" class="btn btn-primary">Apply</a>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

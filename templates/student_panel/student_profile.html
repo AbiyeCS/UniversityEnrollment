@@ -1,0 +1,336 @@
+{% extends 'student_panel/student_base.html' %}
+{% load static users_tag %}
+{% block content %}
+    <div class="page-heading d-flex flex-wrap justify-content-between">
+        <h3>Student Profile</h3>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <label for="">First Name</label>
+                    <input type="text" name="first_name" value="{{ request.user.first_name|default_if_none:'' }}"
+                           class="form-control mb-2">
+                    <label for="">Last Name</label>
+                    <input type="text" name="last_name" value="{{ request.user.last_name|default_if_none:'' }}"
+                           class="form-control mb-2">
+                    <label for="">Date of Birth(YYYY-MM-DD)</label>
+                    <input type="text" name="date_of_birth"
+                           value="{{ student_profile.date_of_birth|date:'Y-m-d'|default_if_none:'' }}"
+                           class="form-control mb-2">
+                    <label for="">Address</label>
+                    <input type="text" name="address" value="{{ student_profile.address|default_if_none:'' }}"
+                           class="form-control mb-2">
+                    <label for="">Phone Number</label>
+                    <input type="text" name="phone_number" value="{{ student_profile.phone_number|default_if_none:'' }}"
+                           class="form-control mb-2">
+                    <label for="">Interested in Sports</label>
+                    <input type="checkbox" name="interested_in_sports"
+                           {% if student_profile.interested_in_sports %}checked{% endif %} class="mb-2">
+                    <br>
+                    <label for="">Sport Name</label>
+                    <select name="interested_sport_name" class="form-control mb-2">
+                        {% for value, display in student_profile.SPORTS_NAME %}
+                            <option value="{{ value }}"
+                                    {% if student_profile.interested_sport_name == value %}selected{% endif %}>{{ display }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="">Sport Certification</label>
+                    <input type="checkbox" name="interested_sport_certification"
+                           {% if student_profile.interested_sport_certification %}checked{% endif %}
+                           class="mb-2">
+                    <br>
+                    <label for="">Sport Description</label>
+                    <textarea name="interested_sport_description"
+                              class="form-control mb-2">{{ student_profile.interested_sport_description|default_if_none:'' }}</textarea>
+                    <label for="">Interested in Extracurricular Activities</label>
+                    <input type="checkbox" name="interested_in_extracurricular"
+                           {% if student_profile.interested_in_extracurci %}checked{% endif %} class="mb-2">
+                    <br>
+                    <label for="">Extracurricular Name</label>
+                    <select name="interested_extracurricular_name" class="form-control mb-2">
+                        {% for value, display in student_profile.EXTRA_CURRICULAR %}
+                            <option value="{{ value }}"
+                                    {% if student_profile.interested_extracurci_name == value %}selected{% endif %}>{{ display }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="">Extracurricular Certification</label>
+                    <input type="checkbox" name="interested_extracurricular_certification"
+                           {% if student_profile.interested_extracurci_certification %}checked{% endif %}
+                           class="mb-2">
+                    <br>
+                    <label for="">Extracurricular Description</label>
+                    <textarea name="interested_extracurricular_description"
+                              class="form-control mb-2">{{ student_profile.interested_extracurci_description|default_if_none:'' }}</textarea>
+
+                    <button class="btn btn-primary mt-2">Update</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <h3>Educational Background</h3>
+        <div class="card">
+            <div class="card-body">
+                <ul id="educational-background-list" class="mt-3 p-2">
+                    {% for eb in educational_backgrounds %}
+                        <li data-id="{{ eb.id }}" class="m-2 p-2 d-flex flex-wrap justify-content-between"
+                            style="border:1px solid lightgrey">
+                            <div>
+                                <h6 class="mb-0">{% for field, value in eb|dict_items %}
+                                    {% if value and field != '_state' and field != 'id' and field != 'student_profile_id' %}
+                                        {{ value }}-{% endif %}{% endfor %}</h6>
+
+                                <ul>
+                                    {% for subject in eb.subject_list.all %}
+                                        <li>{{ subject.title }} - {{ subject.grade }}</li>
+                                        <hr class="m-0">
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div>
+                                <button class="delete-educational-background btn btn-primary">Delete</button>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <h3>Add New Educational Background</h3>
+        <div class="card">
+            <div class="card-body"></div>
+            <form id="educational-background-form" class="p-3">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" class="m-1" name="student_profile_id" value="{{ student_profile.id }}"
+                               hidden>
+                        <select name="main_type" class="m-1 form-control form-select" id="main_type" required>
+                            <option value="high_school">High School</option>
+                            <option value="professional_degree">Professional Degree</option>
+                        </select>
+                        <div id="high_school">
+                            <label for="">Institution Name</label>
+                            <input type="text" class="m-1 form-control" name="institution_name"
+                                   placeholder="Institute Name"
+                                   required>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Studied From</label>
+                                    <input type="date" class="m-1 form-control" name="attended_from"
+                                           placeholder="Attended From">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Studied When</label>
+                                    <input type="date" class="m-1 form-control" name="attended_to"
+                                           placeholder="Attended To">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="degree_fields">
+                            <label for="">Degree Name</label>
+                            <input type="text" class="m-1 form-control" name="degree_name" placeholder="Degree Name">
+                            <label for="">Degree Type</label>
+                            <select name="degree_level" class="m-1 form-control">
+                                <option value="associate">Associate</option>
+                                <option value="bachelors">Bachelors</option>
+                                <option value="masters">Masters</option>
+                                <option value="doctoral">Doctoral</option>
+                            </select>
+                            <select name="score_type" class="m-1 form-control form-select" id="score_type" required>
+                                <option value="">Select Type</option>
+                                <option value="percentage">Percentage</option>
+                                <option value="gpa">GPA</option>
+                                <option value="marks">Marks</option>
+                            </select>
+
+                            <div id="marks_fields" class="score-fields" style="display: none;">
+                                <label for="">Marks</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="number" class="m-1 form-control" name="total_marks"
+                                               placeholder="Total Marks">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="m-1 form-control" name="obtained_marks"
+                                               placeholder="Obtained Marks">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="gpa_fields" class="score-fields" style="display: none;">
+                                <label for="">GPA</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="number" class="m-1 form-control" step="0.01" name="obtained_cgpa"
+                                               placeholder="Obtained CGPA">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="m-1 form-control" step="0.01" name="total_cgpa"
+                                               placeholder="Total CGPA">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="percentage_fields" class="score-fields" style="display: none;">
+                                <label for="">Total Percentage</label>
+                                <input type="number" class="m-1 form-control" step="0.01" name="percentage"
+                                       placeholder="Percentage">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Add Subjects Here</h6>
+                        <div id="subjects-container"></div>
+                        <button type="button" id="add-subject" class="btn btn-secondary">Add Subject</button>
+                    </div>
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-primary float-end mt-2">Add Educational Background</button>
+            </form>
+        </div>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            let subjectIndex = 0;
+
+            $('#add-subject').click(function () {
+                const subjectHtml = `
+                    <div class="subject-group mb-2">
+                        <input type="text" name="subjects[${subjectIndex}][title]" placeholder="Subject Title" required class="form-control mb-1">
+                        <input type="text" name="subjects[${subjectIndex}][element_code]" placeholder="Element Code" class="form-control mb-1">
+                        <input type="text" name="subjects[${subjectIndex}][grade]" placeholder="Grade" class="form-control mb-1">
+                        <button type="button" class="remove-subject btn btn-danger float-end mb-3"><i class="bi bi-trash"></i></button>
+                    </div>`;
+                $('#subjects-container').append(subjectHtml);
+                subjectIndex++;
+            });
+
+            $(document).on('click', '.remove-subject', function () {
+                $(this).closest('.subject-group').remove();
+            });
+
+            $('#educational-background-form').on('submit', function (e) {
+                e.preventDefault();
+                const formData = $(this).serializeArray();
+                const subjects = [];
+                $('#subjects-container .subject-group').each(function () {
+                    const subject = {
+                        title: $(this).find('input[name*="[title]"]').val(),
+                        element_code: $(this).find('input[name*="[element_code]"]').val(),
+                        grade: $(this).find('input[name*="[grade]"]').val()
+                    };
+                    subjects.push(subject);
+                });
+                formData.push({name: 'subjects', value: JSON.stringify(subjects)});
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "add_educational_background" %}',
+                    data: formData,
+                    success: function (response) {
+                        const newItemHtml = generateEducationalBackgroundItemHtml(response);
+                        $('#educational-background-list').append(newItemHtml);
+                        $('#educational-background-form')[0].reset();
+                        $('#subjects-container').empty();
+                    },
+                    error: function (response) {
+                        alert('Error adding educational background.');
+                    }
+                });
+            });
+
+            function generateEducationalBackgroundItemHtml(item) {
+                let subjectsHtml = '';
+                item.subjects.forEach(subject => {
+                    subjectsHtml += `<li>${subject.title} - ${subject.grade}</li><hr class="m-0">`;
+                });
+
+                return `
+                <li data-id="${item.id}" class="m-2 p-2 d-flex flex-wrap justify-content-between" style="border:1px solid lightgrey">
+                    <div>
+                        <h6 class="mb-0">
+                            ${item.institution_name || ''}
+                            ${item.degree_name}
+                            ${item.degree_level}
+                            ${item.total_marks || ''}
+                            ${item.obtained_marks || ''}
+                            ${item.grade || ''} -
+                            ${item.obtained_cgpa || ''}
+                            ${item.total_cgpa || ''}
+                            ${item.percentage || ''}
+                            ${item.attended_from || ''}
+                            ${item.attended_to || ''}
+                        </h6>
+
+                        <ul>${subjectsHtml}</ul>
+                    </div>
+                    <div>
+                        <button class="delete-educational-background btn btn-primary">Delete</button>
+                    </div>
+                </li>`;
+            }
+
+
+            $('#educational-background-list').on('click', '.delete-educational-background', function () {
+                var li = $(this).closest('li');
+                var id = li.data('id');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "delete_educational_background" id=0 %}'.replace('0', id),
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        li.remove();
+                    },
+                    error: function (response) {
+                        alert('Error deleting educational background.');
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        function toggleFields() {
+            const mainType = $('#main_type').val();
+            if (mainType === 'high_school') {
+                $('#high_school').show();
+                $('#degree_fields').hide();
+            } else {
+                $('#high_school').show();
+                $('#degree_fields').show();
+            }
+        }
+
+        $('#main_type').change(toggleFields);
+        toggleFields();
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#score_type').change(function () {
+                $('.score-fields').hide();  // Hide all fields initially
+
+                const selectedType = $(this).val();
+                if (selectedType === 'percentage') {
+                    $('#percentage_fields').show();  // Show Percentage fields
+                } else if (selectedType === 'gpa') {
+                    $('#gpa_fields').show();  // Show GPA fields
+                } else if (selectedType === 'marks') {
+                    $('#marks_fields').show();  // Show Marks fields
+                }
+            });
+
+            // Ensure fields are correctly displayed on page load if a value is selected
+            $('#score_type').trigger('change');
+        });
+
+    </script>
+{% endblock js %}

@@ -1,0 +1,149 @@
+{% extends 'student_panel/student_base.html' %}
+{% load static %}
+{% block styles %}
+    <style>
+        .carousel-control-next-icon {
+            color: black;
+        }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'assets/extensions/owlcarousel/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/extensions/owlcarousel/owl.theme.default.min.css' %}">
+
+{% endblock styles %}
+{% block content %}
+    <div class="page-heading">
+        <h3>Profile Statistics</h3>
+    </div>
+    <div class="page-content">
+        <section class="row">
+            <div class="col-12 col-lg-12">
+                <div class="row">
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon purple mb-2">
+                                            <i class="iconly-boldShow"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Universities</h6>
+                                        <h6 class="font-extrabold mb-0">{{ total_number_uni }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon blue mb-2">
+                                            <i class="iconly-boldProfile"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Courses</h6>
+                                        <h6 class="font-extrabold mb-0">{{ total_courses }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon green mb-2">
+                                            <i class="iconly-boldAdd-User"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Applications</h6>
+                                        <h6 class="font-extrabold mb-0">{{ total_application }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon red mb-2">
+                                            <i class="iconly-boldBookmark"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Under Review</h6>
+                                        <h6 class="font-extrabold mb-0">{{ total_review }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Recommended Universities</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="owl-carousel">
+                                    {% for university in featured_universities %}
+                                        <div class="item">
+                                            <div class="card" style="width: 18rem;">
+                                                <img src="{{ university.get_display_image }}" class="card-img-top" alt="{{ university.name }}" style="min-height: 302px;object-fit: cover">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ university.name }}</h5>
+                                                    <p class="card-text">{{ university.short_description }}</p>
+                                                    <p class="card-text">{{ university.address }}</p>
+                                                    <a href="{% url 'university_detail' university.id %}" class="btn btn-primary">Learn more</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'assets/extensions/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            var item_count = $('.owl-carousel .item').length;
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                navText: [
+                    '<button class="btn btn-primary"><i class="bi bi-chevron-bar-left"></i></button>',
+                    '<button class="btn btn-primary ms-2"><i class="bi bi-chevron-bar-right"></i></button>'
+                ],
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: item_count < 2 ? item_count : 2
+                    },
+                    1000: {
+                        items: item_count < 3 ? item_count : 3
+                    }
+                }
+            });
+        });
+
+    </script>
+{% endblock js %}

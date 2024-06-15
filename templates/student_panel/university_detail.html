@@ -1,0 +1,34 @@
+{% extends 'student_panel/student_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="page-heading">
+        <h3>{{ university.name }} Detail</h3>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="{{ university.get_display_image }}" alt="" width="100%">
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Name: {{ university.name }}</h4>
+                        <h4>Address: {{ university.address }}</h4>
+                        <h4>Session Start Date:{{ university.get_session_start_date|default_if_none:"No specified" }}</h4>
+                        <h4>Application Deadline:{{ university.get_last_app_date }}</h4>
+                        {% for course in courses_list %}
+                            <ul>
+                                <li>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6>{{ course.name }}</h6>
+                                        <a href="{% url 'courses_detail' course.id %}" class="btn btn-primary">View</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

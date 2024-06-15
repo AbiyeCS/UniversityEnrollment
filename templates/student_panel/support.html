@@ -1,0 +1,53 @@
+{% extends request.user.userprofile.is_university|yesno:"university_panel/university_base.html,student_panel/student_base.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'assets/compiled/css/ui-widgets-chatbox.css' %}">
+{% endblock styles %}
+{% block content %}
+    <div class="page-heading">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-12 col-md-6 order-md-1 order-last">
+                    <h3>Old Chats</h3>
+                    <p class="text-subtitle text-muted">Old Chats conversation.</p>
+                </div>
+            </div>
+        </div>
+        <section class="section">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body pt-4 bg-grey">
+                            <div>
+                                <ul>
+                                    {% for sender in senders %}
+                                        <li><a href="{% url 'chat_room' sender.id %}">{{ sender.username }}</a></li>
+                                        {% empty %}
+                                        <li>No old messages</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body pt-4 bg-grey">
+                            <div>
+                                <h5>Create New Messages</h5>
+                                <ul>
+                                    {% for user in all_users %}
+                                        <li><a href="{% url 'chat_room' user.id %}">{{ user.username }}</a></li>
+                                        {% empty %}
+                                        <li>No users are available to chat</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+    </div>
+{% endblock content %}

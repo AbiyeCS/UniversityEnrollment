@@ -1,0 +1,6 @@
+<h2>Application Status</h2>
+<ul>
+    {% for application in applications %}
+        <li>{{ application.university.name }} - {{ application.course }}: {{ application.status }}</li>
+    {% endfor %}
+</ul>

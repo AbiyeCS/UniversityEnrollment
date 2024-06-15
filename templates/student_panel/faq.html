@@ -1,0 +1,15 @@
+{% extends 'student_panel/student_base.html' %}
+{% block content %}
+    <div class="page-heading">
+        <h3>FAQ</h3>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                {{ faq.section|safe }}
+            </div>
+        </div>
+
+    </section>
+{% endblock content %}
+
