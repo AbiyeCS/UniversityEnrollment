@@ -1,0 +1,108 @@
+{% extends 'authentication/auth_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="row" style="height: 100vh">
+        <div class="col-lg-5 col-12">
+            <div id="auth-left" class="p-5">
+                <div class="auth-logo d-flex justify-content-center mb-0">
+                    <a href="#"><img src="{% static 'assets/static/images/bg/logo.png' %}" alt="Logo"
+                                     style="width: 110px;height: 110px"></a>
+                </div>
+                <h1 class="auth-title">Register</h1>
+                <p class="auth-subtitle mb-2">Register you account with us.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group position-relative mb-2">
+                        <label>Select User Type</label>
+                        <select name="user_type" id="user_type" class="form-control" required>
+                            <option value="student" {% if request.POST.user_type == "student" %}selected{% endif %}>Student</option>
+                            <option value="university" {% if request.POST.user_type == "university" %}selected{% endif %}>University</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group position-relative mb-2">
+                        <label>Username</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger">{{ form.username.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group position-relative mb-2">
+                        <label>Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group position-relative mb-2">
+                        <label>Password</label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                            <div class="text-danger">{{ form.password1.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group position-relative mb-2">
+                        <label>Confirm Password</label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <div class="text-danger">{{ form.password2.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div id="uni_fields" style="display: none;">
+                        <div class="form-group position-relative mb-2">
+                            <label>University Name</label>
+                            <input type="text" name="uni_name" id="uni_name" class="form-control" value="{{ request.POST.uni_name }}">
+                        </div>
+                        <div class="form-group position-relative mb-2">
+                            <label>University Address</label>
+                            <input type="text" name="uni_address" id="uni_address" class="form-control" value="{{ request.POST.uni_address }}">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-block btn-lg shadow-lg mt-2">Register</button>
+                </form>
+
+                <div class="text-center mt-2 text-lg">
+                    <p class="text-gray-600">Already have an account? <a href="/login/" class="font-bold">Log
+                        in</a>.</p>
+                    <p><a class="font-bold" href="#">Forgot password?</a>.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 d-none d-lg-block">
+            <div id="auth-right">
+                <img src="{% static 'assets/static/images/bg/login2.jpg' %}" alt="" style="object-fit: cover">
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block js %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const userTypeSelect = document.getElementById("user_type");
+            const uniFields = document.getElementById("uni_fields");
+            const uniNameInput = document.getElementById("uni_name");
+            const uniAddressInput = document.getElementById("uni_address");
+
+            userTypeSelect.addEventListener("change", function () {
+                if (userTypeSelect.value === "university") {
+                    uniFields.style.display = "block";
+                    uniNameInput.required = true;
+                    uniAddressInput.required = true;
+                } else {
+                    uniFields.style.display = "none";
+                    uniNameInput.required = false;
+                    uniAddressInput.required = false;
+                }
+            });
+
+            // Trigger change event on page load to handle the initial state
+            userTypeSelect.dispatchEvent(new Event("change"));
+        });
+    </script>
+
+{% endblock js %}

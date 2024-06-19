@@ -1,0 +1,47 @@
+{% extends 'authentication/auth_base.html' %}
+{% load static %}
+{% block content %}
+<div class="row" style="height: 100vh">
+    <div class="col-lg-5 col-12">
+        <div id="auth-left" class="p-5">
+            <div class="auth-logo d-flex justify-content-center mb-0">
+                <a href="#"><img src="{% static 'assets/static/images/bg/logo.png' %}" alt="Logo" style="width: 110px;height: 110px"></a>
+            </div>
+            <h1 class="auth-title">Log in.</h1>
+            <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group position-relative has-icon-left mb-4">
+                    {{ form.username }}
+                    <div class="form-control-icon">
+                        <i class="bi bi-person"></i>
+                    </div>
+                </div>
+                <div class="form-group position-relative has-icon-left mb-4">
+                    {{ form.password }}
+                    <div class="form-control-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                </div>
+                <div class="form-check form-check-lg d-flex align-items-end">
+                    <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label text-gray-600" for="flexCheckDefault">
+                        Keep me logged in
+                    </label>
+                </div>
+                <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
+            </form>
+            <div class="text-center mt-5 text-lg">
+                <p class="text-gray-600">Don't have an account? <a href="/register/" class="font-bold">Sign
+                        up</a>.</p>
+                <p><a class="font-bold" href="#">Forgot password?</a>.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7 d-none d-lg-block">
+        <div id="auth-right">
+            <img src="{% static 'assets/static/images/bg/login2.jpg' %}" alt="" style="object-fit: cover">
+        </div>
+    </div>
+</div>
+{% endblock content %}
