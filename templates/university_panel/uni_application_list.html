@@ -1,0 +1,54 @@
+{% extends 'university_panel/university_base.html' %}
+{% block content %}
+    <div class="page-heading">
+        <h3>List of Applications</h3>
+    </div>
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    List of applications you applied
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="table1">
+                        <thead>
+                            <tr>
+                                <th>Student name</th>
+                                <th>Course name</th>
+                                <th>Status</th>
+                                <th>Applied on (Date)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for application in application_object_list %}
+                            <tr {% if application.is_flagged %}style="background: #5ddab4"{% endif %}>
+                                <td>{{ application.student.user_profile.user.get_full_name }}</td>
+                                <td>{{ application.course.name }}</td>
+                                <td><span class="badge bg-light-warning">{{ application.status|upper }}</span></td>
+                                <td>{{ application.submission_date }}</td>
+                                <td>
+                                    <a class="btn btn-primary" href="{% url 'uni_application_review' application_id=application.id %}">Review</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td>No data available</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+{% endblock content %}

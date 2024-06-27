@@ -1,0 +1,423 @@
+{% extends 'university_panel/university_base.html' %}
+{% block content %}
+    <!-- The Modal -->
+    <div class="modal" id="courseModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Course Form</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="courseForm" method="post">
+                        {% csrf_token %}
+                        <div id="form-container"></div>
+                    </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitCourseForm()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Modal for Questions -->
+    <div class="modal" id="questionModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Question Form</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="questionForm" method="post">
+                        {% csrf_token %}
+                        <div id="question-form-container"></div>
+                    </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitQuestionForm()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="page-heading">
+        <h3>Design your Course</h3>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table" id="table2">
+                            <thead>
+                            <tr>
+                                <th>Discipline name</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for discipline in all_disciplines %}
+                                <tr>
+                                    <td>{{ discipline.name }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td>No data available</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="p-3">
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                data-bs-target="#addFeeForm">
+                            Add fees
+                        </button>
+                        <!--login form Modal -->
+                        <div class="modal fade text-left" id="addFeeForm" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel33" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                 role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="myModalLabel33">Add Fee Form </h4>
+                                        <button type="button" class="close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                            <i data-feather="x"></i>
+                                        </button>
+                                    </div>
+                                    <form method="post" id="feeForm">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <label for="email">Fee Name: </label>
+                                            <div class="form-group">
+                                                <input name="fee_name" type="text" placeholder="Enter Fee Name"
+                                                       class="form-control">
+                                            </div>
+                                            <label for="password">Amount: </label>
+                                            <div class="form-group">
+                                                <input name="fee_amount" type="number" step="0.00"
+                                                       placeholder="Enter Amount"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-light-secondary"
+                                                    data-bs-dismiss="modal">
+                                                <i class="bx bx-x d-block d-sm-none"></i>
+                                                <span class="d-none d-sm-block">Close</span>
+                                            </button>
+                                            <button type="button" class="btn btn-success ms-1"
+                                                    onclick="submitFeeForm()">
+                                                <i class="bx bx-check d-block d-sm-none"></i>
+                                                <span class="d-none d-sm-block">Submit</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" id="table3">
+                            <thead>
+                            <tr>
+                                <th>Fee name</th>
+                                <th>Fee Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for fee in all_fees %}
+                                <tr>
+                                    <td>{{ fee.name }}</td>
+                                    <td>{{ fee.amount }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td>No data available</td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="page-heading">
+        <h3>Add Your Questions Here</h3>
+    </div>
+    <section class="section">
+        <div class="card p-3">
+            <div>
+                <button type="button" class="btn btn-success float-end" data-bs-toggle="modal"
+                        data-bs-target="#questionModal"
+                        onclick="openCreateQuestionModal()">Create Question
+                </button>
+            </div>
+
+            <div class="card-body">
+                <table class="table" id="table4">
+                    <thead>
+                    <tr>
+                        <th>Questions</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for question in all_questions %}
+                        <tr>
+                            <td>{{ question.question }}</td>
+                            <td>
+                                <a href="#" class="btn btn-primary"
+                                   onclick="openEditQuestionModal('{{ question.id }}')">Edit</a>
+                                <a href="#" class="btn btn-danger"
+                                   onclick="deleteQuestion('{{ question.id }}')">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td>No data available</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <div class="page-heading">
+        <h3>Add Your Courses Here</h3>
+    </div>
+
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title">
+                        List of Courses
+                    </h5>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#courseModal"
+                            onclick="openCreateModal('{{ university_profile.id }}')">Create Course
+                    </button>
+                </div>
+
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="table1">
+                        <thead>
+                        <tr>
+                            <th>Course name</th>
+                            <th>Fee</th>
+                            <th>Taught language</th>
+                            <th>Application deadline</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for course in all_courses %}
+                            <tr>
+                                <td>{{ course.name }}</td>
+                                <td>{% for fee in course.fee.all %}{{ fee.name }}:{{ fee.amount }}<br>{% endfor %}</td>
+                                <td>{{ course.taught_language }}</td>
+                                <td>{{ course.university.get_last_app_date }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-primary"
+                                       onclick="openEditModal('{{ course.id }}')">Edit</a>
+                                    <a href="#" class="btn btn-danger"
+                                       onclick="deleteCourse('{{ course.id }}')">Delete</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td>No data available</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+{% endblock content %}
+{% block js %}
+    <script>
+        function submitFeeForm() {
+            $('#feeForm').submit()
+        }
+    </script>
+    <script>
+        function openCreateModal(universityId) {
+            $.ajax({
+                url: `/university/create_course/${universityId}/`,
+                type: 'GET',
+                success: function (data) {
+                    $('#form-container').html(data);
+                    $('#courseForm').attr('action', `/university/create_course/${universityId}/`);
+                    $('#courseModal').modal('show');
+                }
+            });
+        }
+
+        function openEditModal(courseId) {
+            $.ajax({
+                url: `/university/edit_course/${courseId}/`,
+                type: 'GET',
+                success: function (data) {
+                    $('#form-container').html(data);
+                    $('#courseForm').attr('action', `/university/edit_course/${courseId}/`);
+                    $('#courseModal').modal('show');
+                }
+            });
+        }
+
+        function submitCourseForm() {
+            var form = $('#courseForm');
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        $('#courseModal').modal('hide');
+                        location.reload();
+                    } else {
+                        // Handle errors
+                        form.find('.invalid-feedback').remove();
+                        form.find('.is-invalid').removeClass('is-invalid');
+                        for (var field in data.errors) {
+                            var errorField = form.find(`[name=${field}]`);
+                            errorField.after(`<div class="invalid-feedback">${data.errors[field]}</div>`);
+                            errorField.addClass('is-invalid');
+                        }
+                    }
+                }
+            });
+        }
+
+        function deleteCourse(courseId) {
+            if (confirm('Are you sure you want to delete this course?')) {
+                $.ajax({
+                    url: `/university/delete_course/${courseId}/`,
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('An error occurred while deleting the course.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred while deleting the course.');
+                    }
+                });
+            }
+        }
+
+    </script>
+    <script>
+
+        function openCreateQuestionModal() {
+            $.ajax({
+                url: `{% url 'create_question' %}`,
+                type: 'GET',
+                success: function (data) {
+                    $('#question-form-container').html(data);
+                    $('#questionForm').attr('action', `{% url 'create_question' %}`);
+                    $('#questionModal').modal('show');
+                }
+            });
+        }
+
+        function openEditQuestionModal(questionId) {
+            $.ajax({
+                url: `/university/edit_question/${questionId}/`,
+                type: 'GET',
+                success: function (data) {
+                    $('#question-form-container').html(data);
+                    $('#questionForm').attr('action', `/university/edit_question/${questionId}/`);
+                    $('#questionModal').modal('show');
+                }
+            });
+        }
+
+        function submitQuestionForm() {
+            var form = $('#questionForm');
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        $('#questionModal').modal('hide');
+                        location.reload();
+                    } else {
+                        // Handle errors
+                        form.find('.invalid-feedback').remove();
+                        form.find('.is-invalid').removeClass('is-invalid');
+                        for (var field in data.errors) {
+                            var errorField = form.find(`[name=${field}]`);
+                            errorField.after(`<div class="invalid-feedback">${data.errors[field]}</div>`);
+                            errorField.addClass('is-invalid');
+                        }
+                    }
+                }
+            });
+        }
+
+        function deleteQuestion(questionId) {
+            if (confirm('Are you sure you want to delete this question?')) {
+                $.ajax({
+                    url: `/university/delete_question/${questionId}/`,
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('An error occurred while deleting the question.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred while deleting the question.');
+                    }
+                });
+            }
+        }
+    </script>
+
+
+
+{% endblock js %}

@@ -1,0 +1,86 @@
+{% extends 'university_panel/university_base.html' %}
+{% load static users_tag %}
+{% block content %}
+    <div class="page-heading d-flex flex-wrap justify-content-between">
+        <h3>University Profile</h3>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Display Image Url:</label>
+                        {{ form.display_image }}
+                    </div>
+                    <div class="form-group">
+                        <label for="display_image">Display Image:</label>
+                        {{ form.display_image_file }}
+                        {% if university_profile.display_image_file %}
+                            <img src="{{ university_profile.display_image_file.url }}" alt="Display Image"
+                                 class="img-thumbnail mt-2" width="200">
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="site_url">Site URL:</label>
+                        {{ form.site_url }}
+                    </div>
+                    <h5>University Preference (Total Should be equal to hundred)</h5>
+                    <div class="slider-container">
+                        <label class="slider-label" for="slider1">GPA Weight:</label>
+                        <input type="range" id="slider1" name="gpa_weight" min="0" max="100" value="{{ university_weight.gpa_weight }}">
+                        <span class="slider-value" id="value1">{{ university_weight.gpa_weight }}</span>
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label" for="slider2">Sports Interest Weight:</label>
+                        <input type="range" id="slider2" name="sports_interest_weight" min="0" max="100" value="{{ university_weight.sports_interest_weight }}">
+                        <span class="slider-value" id="value2">{{ university_weight.sports_interest_weight }}</span>
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label" for="slider3">Extracurricular interest weight:</label>
+                        <input type="range" id="slider3" name="extracurricular_interest_weight" min="0" max="100" value="{{ university_weight.extracurricular_interest_weight }}">
+                        <span class="slider-value" id="value3">{{ university_weight.extracurricular_interest_weight }}</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        const sliders = document.querySelectorAll('input[type="range"]');
+        const values = [document.getElementById('value1'), document.getElementById('value2'), document.getElementById('value3')];
+
+        sliders.forEach((slider, index) => {
+            slider.addEventListener('input', () => {
+                let total = 0;
+
+                // Calculate the total value of all sliders except the current one
+                sliders.forEach((s, i) => {
+                    if (i !== index) {
+                        total += parseInt(s.value);
+                    }
+                });
+
+                // Adjust the current slider's value to ensure the total does not exceed 100
+                const max = 100 - total;
+                if (parseInt(slider.value) > max) {
+                    slider.value = max;
+                }
+
+                // Update the displayed value
+                values[index].textContent = slider.value;
+            });
+        });
+    </script>
+{% endblock js %}

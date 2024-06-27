@@ -1,0 +1,239 @@
+{% extends 'university_panel/university_base.html' %}
+{% load static users_tag %}
+{% block content %}
+    <div class="page-heading">
+        <div class="d-flex justify-content-between">
+            <h3>Application Review</h3>
+            <div>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#inlineStatusChangeForm">Change Status</button>
+                <!-- in line note form modal -->
+                <div class="modal fade text-left" id="inlineStatusChangeForm" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel33" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                         role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel33">Application Status </h4>
+                                <button type="button" class="close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                    <i data-feather="x"></i>
+                                </button>
+                            </div>
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <label>Current Status: </label>
+                                    <p>{{ application_object.status }}</p>
+                                    <label for="email">New Status: </label>
+                                    <div class="form-group">
+                                        <select name="new_status" id="new_status" class="form-select">
+                                            <option value="pending">Pending</option>
+                                            <option value="reviewed">Reviewed</option>
+                                            <option value="accepted">Accepted</option>
+                                            <option value="rejected">Rejected</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light-secondary"
+                                            data-bs-dismiss="modal">
+                                        <i class="bx bx-x d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Close</span>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary ms-1">
+                                        <i class="bx bx-check d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Confirm</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#inlineNoteForm">Add
+                    Notes
+                </button>
+                <!-- in line note form modal -->
+                <div class="modal fade text-left" id="inlineNoteForm" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel33" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                         role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel33">Application Note </h4>
+                                <button type="button" class="close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                    <i data-feather="x"></i>
+                                </button>
+                            </div>
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <label for="email">Note: </label>
+                                    <div class="form-group">
+                                        <textarea id="note" name="note" type="text" placeholder="Please enter your note here"
+                                                  class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light-secondary"
+                                            data-bs-dismiss="modal">
+                                        <i class="bx bx-x d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Close</span>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary ms-1">
+                                        <i class="bx bx-check d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Save</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn {% if application_object.is_flagged %}btn-warning{% else %}btn-outline-warning{% endif %}" id="flag-toggle" data-id="{{ application_object.id }}">
+                    {% if application_object.is_flagged %}
+                        <i class="bi bi-flag-fill"></i>
+                    {% else %}
+                        <i class="bi bi-flag"></i>
+                    {% endif %}
+                </button>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Applicant Personal Information</h5>
+                                <ul>
+                                    <li>Name: {{ application_object.student.user_profile.user.get_full_name }}</li>
+                                    <li>Address: {{ application_object.student.address }}</li>
+                                    <li>Date of Birth: {{ application_object.student.date_of_birth }}</li>
+                                    <li>Phone: {{ application_object.student.phone_number }}</li>
+                                    <li>Interested in Sports:{% if student_profile.interested_in_sports %}
+                                        Yes{% endif %}</li>
+                                    <li>Sport Name:{{ student_profile.interested_sport_name }}</li>
+                                    <li>Sport Certification:
+                                        {% if student_profile.interested_sport_certification %}Yes{% else %}
+                                            No{% endif %}</li>
+                                    <li>Sport
+                                        Description:{{ student_profile.interested_sport_description|default_if_none:'' }}</li>
+                                    <li>Interested in Extracurricular Activities:
+                                        {% if student_profile.interested_in_extracurci %}
+                                            Yes{% else %}No{% endif %}</li>
+                                    <li>Extracurricular
+                                        Name:{{ student_profile.interested_extracurci_name }}</li>
+                                    <li>Extracurricular Certification:
+                                        {% if student_profile.interested_extracurci_certification %}
+                                            Yes{% else %}No{% endif %}</li>
+                                    <li>Extracurricular
+                                        Description:{{ student_profile.interested_extracurci_description|default_if_none:'' }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Educational Background</h5>
+                                {% for eb in educational_backgrounds %}
+                                    <li data-id="{{ eb.id }}" class="m-2 p-2 d-flex flex-wrap justify-content-between"
+                                        style="border:1px solid lightgrey">
+                                        <div>
+                                            {% if eb.main_type == 'high_school' %}
+                                                <h6>High School</h6>
+                                            {% else %}
+                                                <h6>Professional Degree</h6>
+                                            {% endif %}
+                                            <ul class="mb-0">
+                                                {% for field, value in eb|dict_items %}
+                                                    {% if value and field != '_state' and field != 'id' and field != 'student_profile_id' and field != 'main_type' and field != 'degree_level' %}
+                                                        <li>{{ value }}</li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                            <h6 class="mt-3">Subjects</h6>
+                                            <ul class="text-decoration-none">
+                                                {% for subject in eb.subject_list.all %}
+                                                    <li>{{ subject.title }} - {{ subject.grade }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Review Notes</h5>
+                                {% for note in all_notes %}
+                                    <li class="d-flex">
+                                        {{ note.note }}
+                                    </li>
+                                    <hr class="m-0">
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Questions and Answers</h3>
+                        <h6>Q: Please Write a personal statement</h6>
+                        <p>A: {{ application_object.personal_statement }}</p>
+                        {% for object in question_answer_object %}
+                            <h6><strong>Q: {{ object.question }}</strong></h6>
+                            <p><strong>A: </strong>{{ object.answer }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+{% block js %}
+    <script>
+        $(document).ready(function(){
+            $('#flag-toggle').click(function(){
+                var applicationId = $(this).data('id');
+                $.ajax({
+                    url: '{% url "toggle_flag" %}', // Add your URL for the toggle view
+                    method: 'POST',
+                    data: {
+                        'application_id': applicationId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if(response.is_flagged) {
+                            $('#flag-toggle').html('<i class="bi bi-flag-fill"></i>');
+                            $('#flag-toggle').removeClass('btn-outline-warning')
+                            $('#flag-toggle').addClass('btn-warning')
+                        } else {
+                            $('#flag-toggle').html('<i class="bi bi-flag"></i>');
+                            $('#flag-toggle').removeClass('btn-warning')
+                            $('#flag-toggle').addClass('btn-outline-warning')
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock js %}

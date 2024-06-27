@@ -1,0 +1,268 @@
+{% extends 'university_panel/university_base.html' %}
+{% load static %}
+{% block styles %}
+    <style>
+        .carousel-control-next-icon {
+            color: black;
+        }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'assets/extensions/owlcarousel/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/extensions/owlcarousel/owl.theme.default.min.css' %}">
+
+{% endblock styles %}
+{% block content %}
+    <div class="page-heading">
+        <h3>Profile Statistics</h3>
+    </div>
+    <div class="page-content">
+        <section class="row">
+            <div class="col-12 col-lg-12">
+                <div class="row">
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon purple mb-2">
+                                            <i class="iconly-boldShow"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Accepted</h6>
+                                        <h6 class="font-extrabold mb-0">{{ accepted_application }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon blue mb-2">
+                                            <i class="iconly-boldProfile"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Courses</h6>
+                                        <h6 class="font-extrabold mb-0">{{ total_courses }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon green mb-2">
+                                            <i class="iconly-boldAdd-User"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Applications</h6>
+                                        <h6 class="font-extrabold mb-0">{{ total_application }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon red mb-2">
+                                            <i class="iconly-boldBookmark"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Under Review</h6>
+                                        <h6 class="font-extrabold mb-0">{{ total_review }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon purple mb-2">
+                                            <i class="iconly-boldStar"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">GPA</h6>
+                                        <h6 class="font-extrabold mb-0">{{ university_weight.gpa_weight }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon blue mb-2">
+                                            <i class="iconly-boldShield-Done"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Sports</h6>
+                                        <h6 class="font-extrabold mb-0">{{ university_weight.sports_interest_weight }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-4 py-4-5">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                        <div class="stats-icon red mb-2">
+                                            <i class="iconly-boldBookmark"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                        <h6 class="text-muted font-semibold">Extracurricular</h6>
+                                        <h6 class="font-extrabold mb-0">{{ university_weight.extracurricular_interest_weight }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between">
+                                    <h4>Recommended Applications</h4>
+                                    <button class="btn btn-primary" onclick="refreshRecommend()">Refresh Recommendation</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-start flex-wrap">
+                                    {% for app in apps %}
+                                        <div class="m-1">
+                                            <div class="card" style="width: 18rem;border: 1px solid darkgreen">
+                                                <div class="card-body">
+                                                    <h5>Name:{{ app.student.user_profile.user.username }}</h5>
+                                                    <h6>Course:{{ app.course.name }}</h6>
+                                                    <h6>Grade
+                                                        Score:{{ app.student.education_gpa_score|floatformat:2 }}</h6>
+                                                    <h6>Sports
+                                                        Score:{{ app.student.sports_interest_score|floatformat:2 }}</h6>
+                                                    <h6>Extra Circular
+                                                        Score:{{ app.student.extracurricular_interest_score|floatformat:2 }}</h6>
+                                                    <a href="/university/uni_application_review/{{ app.id }}/">Review</a>
+                                                    <div class="w-100">
+                                                        <button class="btn btn-danger dislike-btn float-end mt-2"
+                                                                data-app-id="{{ app.id }}"><i
+                                                                class="bi bi-hand-thumbs-down"></i> I don't like
+                                                            this
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'assets/extensions/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            var item_count = $('.owl-carousel .item').length;
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                navText: [
+                    '<button class="btn btn-primary"><i class="bi bi-chevron-bar-left"></i></button>',
+                    '<button class="btn btn-primary ms-2"><i class="bi bi-chevron-bar-right"></i></button>'
+                ],
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: item_count < 2 ? item_count : 2
+                    },
+                    1000: {
+                        items: item_count < 3 ? item_count : 3
+                    }
+                }
+            });
+        });
+
+    </script>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("DOM fully loaded and parsed");
+            const buttons = document.querySelectorAll('.dislike-btn');
+            buttons.forEach(function (button) {
+                console.log("Setting up click listener for button", button);
+                button.addEventListener('click', function () {
+                    console.log("Button clicked");
+                    const appId = this.dataset.appId;
+                    const csrftoken = getCookie('csrftoken');
+                    const card = this.closest('.card');
+
+                    fetch('{% url "dislike_recommendation" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken
+                        },
+                        body: JSON.stringify({app_id: appId})
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                alert('Feedback recorded.');
+                                card.remove()
+                            } else {
+                                alert('Error recording feedback.');
+                            }
+                        });
+                });
+            });
+        });
+        function refreshRecommend(){
+            window.location.reload();
+        }
+    </script>
+{% endblock js %}
