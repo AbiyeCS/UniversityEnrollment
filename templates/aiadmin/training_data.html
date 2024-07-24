@@ -1,0 +1,134 @@
+{% extends 'aiadmin/aiadmin_base.html' %}
+{% block content %}
+    <h1>Training Data for Model</h1>
+    <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-danger me-2" id="cleanDataBtn">Clean All Data</button>
+        <button class="btn btn-success me-2" onclick="location.href='{% url 'download_data' %}'">Download Data</button>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addTrainingModalForm">Add Training Data
+        </button>
+    </div>
+
+    <!-- Add Training Data Modal -->
+    <div class="modal fade text-left" id="addTrainingModalForm" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+             role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Add New Data</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <label>GPA Score: </label>
+                        <input type="number" name="gpa_score" class="form-control" required>
+                        <label>Sports Interest Score: </label>
+                        <input type="number" name="sports_interest_score" class="form-control" required>
+                        <label>Extracurricular Interest Score: </label>
+                        <input type="number" name="extracurricular_interest_score" class="form-control" required>
+                        <label>University GPA Weight: </label>
+                        <input type="number" name="uni_gpa_weight" class="form-control" required>
+                        <label>University Sports Weight: </label>
+                        <input type="number" name="uni_sports_weight" class="form-control" required>
+                        <label>University Extracurricular Weight: </label>
+                        <input type="number" name="uni_extracurricular_weight" class="form-control" required>
+                        <label>Application Status:(0 for rejected and 1 for accepted) </label>
+                        <input type="number" name="accepted" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-secondary"
+                                data-bs-dismiss="modal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Close</span>
+                        </button>
+                        <button type="submit" class="btn btn-primary ms-1">
+                            <i class="bx bx-check d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Add</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card mt-3">
+        <div class="card-body">
+            <table class="table table-responsive" id="table1">
+                <thead>
+                <tr>
+                    <th>GPA Score</th>
+                    <th>Sports Interest Score</th>
+                    <th>Extracurricular Interest Score</th>
+                    <th>University GPA Weight</th>
+                    <th>University Sports Weight</th>
+                    <th>University Extracurricular Weight</th>
+                    <th>Application Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for object in training_data_objects %}
+                    <tr>
+                        <td>{{ object.gpa_score }}</td>
+                        <td>{{ object.sports_interest_score }}</td>
+                        <td>{{ object.extracurricular_interest_score }}</td>
+                        <td>{{ object.uni_gpa_weight }}</td>
+                        <td>{{ object.uni_sports_weight }}</td>
+                        <td>{{ object.uni_extracurricular_weight }}</td>
+                        <td>{% if object.accepted %}1{% else %}0{% endif %}</td>
+                        <td>{{ object.created_at }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="confirmDelete({{ object.id }})">Delete
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        document.getElementById('cleanDataBtn').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{% url 'clean_data' %}";
+                }
+            })
+        });
+
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/admin_dashboard/delete-data/${id}/`;
+                }
+            })
+        }
+    </script>
+
+
+{% endblock js %}
