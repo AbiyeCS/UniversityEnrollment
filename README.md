@@ -48,5 +48,5 @@ For pre-training -> /admin_dashboard/model-training/
 for seeing and deleting training data -> /admin_dashboard/training-data/
 for seeing recommendations -> /admin_dashboard/all_recommendations/
 
-For you to see recommendations you have to set weightage in http://127.0.0.1:8000/admin/university_panel/universityaiweight/ 
+For you to see recommendations you have to set the initial weightage for a university in http://127.0.0.1:8000/admin/university_panel/universityaiweight/ 
 
