@@ -17,7 +17,7 @@ class UniversityProfile(models.Model):
 
     def get_weights_str(self):
         weight_object = UniversityAIWeight.objects.filter(university_profile=self).first()
-        return f"Grade:{weight_object.gpa_weight}|Sports:{weight_object.sports_interest_weight}|ExtraCircular:{weight_object.extracurricular_interest_weight}"
+        return f"Grade:{weight_object.gpa_weight}|Sports:{weight_object.sports_interest_weight}|Extracurricular:{weight_object.extracurricular_interest_weight}"
 
     def get_last_app_date(self):
         try:
