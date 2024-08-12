@@ -1,25 +1,21 @@
 import csv
 import json
 
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
-
-from sapms import settings
-from .ai_utils import load_model
-import pandas as pd
-from university_panel.models import UniversityProfile, UniversityAIWeight, Course
-from student_panel.models import Application
-from .forms import TrainingFileForm
-from .tasks import process_training_file
-from django.contrib import messages
 import numpy as np
-from aiadmin.models import TrainingModel, FeedbackModel
+import pandas as pd
+from django.contrib import messages
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+
+from aiadmin.models import FeedbackModel
+from student_panel.models import Application
+from university_panel.models import UniversityAIWeight
+from .ai_utils import load_model
 from .forms import *
+from .tasks import process_training_file
 
-
-# Create your views here.
 
 def admin_dashboard(request):
     total_number_uni = UniversityProfile.objects.all().count()
@@ -27,12 +23,12 @@ def admin_dashboard(request):
     total_application = Application.objects.all().count()
     total_review = Application.objects.all().exclude(status='pending').count()
     context = {
-        "total_number_uni":total_number_uni,
-        "total_courses":total_courses,
-        "total_application":total_application,
-        "total_review":total_review,
+        "total_number_uni": total_number_uni,
+        "total_courses": total_courses,
+        "total_application": total_application,
+        "total_review": total_review,
     }
-    return render(request,'aiadmin/index.html', context)
+    return render(request, 'aiadmin/index.html', context)
 
 
 def ai_recommendations(request):
@@ -75,9 +71,7 @@ def ai_recommendations(request):
     return render(request, 'aiadmin/ai_recommendations.html', context)
 
 
-
 def model_training_view(request):
-
     if request.method == 'POST':
         form = TrainingFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -86,12 +80,12 @@ def model_training_view(request):
             messages.success(request, 'File uploaded successfully and training started.')
             return redirect('model_training')
     else:
-            form = TrainingFileForm()
+        form = TrainingFileForm()
 
     # Handle GET request
     trained_model_list = TrainingModel.objects.all().order_by('-uploaded_at')
 
-    return render(request, 'aiadmin/model_training.html', {'form':form, 'trained_model_list':trained_model_list})
+    return render(request, 'aiadmin/model_training.html', {'form': form, 'trained_model_list': trained_model_list})
 
 
 def training_data(request):
@@ -109,11 +103,11 @@ def training_data(request):
                                      extracurricular_interest_score=extracurricular_interest_score,
                                      uni_gpa_weight=uni_gpa_weight, uni_sports_weight=uni_sports_weight,
                                      uni_extracurricular_weight=uni_extracurricular_weight, accepted=accepted)
-        messages.success(request,"Data Added Successfully")
+        messages.success(request, "Data Added Successfully")
         return redirect('training_data')
 
     context = {
-        "training_data_objects":training_data_objects
+        "training_data_objects": training_data_objects
     }
     return render(request, "aiadmin/training_data.html", context)
 
@@ -135,7 +129,9 @@ def download_data(request):
     response['Content-Disposition'] = 'attachment; filename="training_data.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['gpa_score', 'sports_interest_score', 'extracurricular_interest_score','uni_gpa_weight','uni_sports_weight', 'uni_extracurricular_weight','accepted'])
+    writer.writerow(
+        ['gpa_score', 'sports_interest_score', 'extracurricular_interest_score', 'uni_gpa_weight', 'uni_sports_weight',
+         'uni_extracurricular_weight', 'accepted'])
 
     for data in FeedbackModel.objects.all():
         writer.writerow([data.gpa_score, data.sports_interest_score, data.extracurricular_interest_score,
@@ -143,7 +139,6 @@ def download_data(request):
                          1 if data.accepted else 0])
 
     return response
-
 
 
 def dislike_recommendation(request):
@@ -170,12 +165,12 @@ def dislike_recommendation(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
-
 # cruds for University , student , pplication and courses
 class UniversityProfileListView(ListView):
     model = UniversityProfile
     template_name = 'aiadmin/university_profile_list.html'
     context_object_name = 'universities'
+
 
 class UniversityProfileCreateView(CreateView):
     model = UniversityProfile
@@ -183,16 +178,19 @@ class UniversityProfileCreateView(CreateView):
     template_name = 'aiadmin/university_profile_form.html'
     success_url = reverse_lazy('university_profile_list')
 
+
 class UniversityProfileUpdateView(UpdateView):
     model = UniversityProfile
     form_class = UniversityProfileForm
     template_name = 'aiadmin/university_profile_form.html'
     success_url = reverse_lazy('university_profile_list')
 
+
 class UniversityProfileDeleteView(DeleteView):
     model = UniversityProfile
     template_name = 'aiadmin/university_profile_confirm_delete.html'
     success_url = reverse_lazy('university_profile_list')
+
 
 # Course views
 class CourseListView(ListView):
@@ -200,11 +198,13 @@ class CourseListView(ListView):
     template_name = 'aiadmin/course_list.html'
     context_object_name = 'courses'
 
+
 class CourseCreateView(CreateView):
     model = Course
     form_class = CourseForm
     template_name = 'aiadmin/course_form.html'
     success_url = reverse_lazy('course_list')
+
 
 class CourseUpdateView(UpdateView):
     model = Course
@@ -212,8 +212,8 @@ class CourseUpdateView(UpdateView):
     template_name = 'aiadmin/course_form.html'
     success_url = reverse_lazy('course_list')
 
+
 class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'aiadmin/course_confirm_delete.html'
     success_url = reverse_lazy('course_list')
-

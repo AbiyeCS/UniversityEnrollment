@@ -13,8 +13,6 @@ import numpy as np
 import pandas as pd
 
 
-# Create your views here.
-
 def customize_weights_view(request):
     university_profile = request.user.userprofile.universityprofile
     university_ai_weight, created = UniversityAIWeight.objects.get_or_create(university_profile=university_profile)
@@ -26,7 +24,6 @@ def customize_weights_view(request):
     else:
         form = WeightageForm(instance=university_ai_weight)
     return render(request, 'university_panel/customize_weights.html', {'form': form})
-
 
 
 @user_type_required('university')
@@ -74,9 +71,9 @@ def university_dashboard(request):
         "total_application": total_application,
         "total_review": total_review,
         "apps": recommendations,
-        "university_weight":university_weight,
+        "university_weight": university_weight,
     }
-    return render(request,"university_panel/index.html", context)
+    return render(request, "university_panel/index.html", context)
 
 
 @user_type_required('university')
@@ -85,22 +82,22 @@ def uni_application_list(request):
     application_object_list = Application.objects.filter(university=university_profile)
 
     context = {
-        "application_object_list":application_object_list
+        "application_object_list": application_object_list
     }
-    return render(request,"university_panel/uni_application_list.html", context)
+    return render(request, "university_panel/uni_application_list.html", context)
 
 
 @user_type_required('university')
 def uni_application_review(request, application_id):
     application_object = get_object_or_404(Application, id=application_id)
     educational_backgrounds = EducationalBackground.objects.filter(student_profile=application_object.student)
-    question_answer_object = ApplicationQA.objects.filter(application = application_object)
+    question_answer_object = ApplicationQA.objects.filter(application=application_object)
     all_notes = ApplicationNote.objects.filter(application=application_object)
     print(request.POST, "request post")
     if 'note' in request.POST:
         note = request.POST.get('note')
         if application_object and note:
-            ApplicationNote.objects.create(note=note,application=application_object)
+            ApplicationNote.objects.create(note=note, application=application_object)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     if 'new_status' in request.POST:
@@ -109,21 +106,19 @@ def uni_application_review(request, application_id):
             application_object.status = new_status
             application_object.save()
             if new_status == 'accepted':
-                create_feedback_entry(application_object,1)
+                create_feedback_entry(application_object, 1)
             if new_status == 'rejected':
-                create_feedback_entry(application_object,0)
+                create_feedback_entry(application_object, 0)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
-
     context = {
-        "application_object" : application_object,
-        "educational_backgrounds":educational_backgrounds,
-        "question_answer_object":question_answer_object,
-        "all_notes":all_notes
+        "application_object": application_object,
+        "educational_backgrounds": educational_backgrounds,
+        "question_answer_object": question_answer_object,
+        "all_notes": all_notes
 
     }
-    return render(request,"university_panel/uni_application_review.html", context)
+    return render(request, "university_panel/uni_application_review.html", context)
 
 
 @user_type_required('university')
@@ -139,18 +134,17 @@ def uni_course_list(request):
         fee_name = request.POST.get('fee_name')
         fee_amount = request.POST.get('fee_amount')
         if fee_name and fee_amount:
-            Fee.objects.create(name=fee_name, amount=fee_amount,university=university_profile)
+            Fee.objects.create(name=fee_name, amount=fee_amount, university=university_profile)
             return redirect('uni_course_list')
 
-
     context = {
-        'all_courses':all_courses,
-        'all_disciplines':all_disciplines,
-        'all_fees':all_fees,
-        'university_profile':university_profile,
-        'all_questions':all_questions,
+        'all_courses': all_courses,
+        'all_disciplines': all_disciplines,
+        'all_fees': all_fees,
+        'university_profile': university_profile,
+        'all_questions': all_questions,
     }
-    return render(request,"university_panel/course_list.html", context)
+    return render(request, "university_panel/course_list.html", context)
 
 
 @user_type_required('university')
@@ -257,7 +251,7 @@ def uni_profile(request):
                 university_weight.sports_interest_weight = sports_interest_weight
                 university_weight.extracurricular_interest_weight = extracurricular_interest_weight
                 university_weight.save()
-            messages.success(request,"Updated Successfully")
+            messages.success(request, "Updated Successfully")
             return redirect('uni_profile')
     else:
         form = UniversityProfileForm(instance=university_profile)
@@ -265,20 +259,20 @@ def uni_profile(request):
     context = {
         'form': form,
         'university_profile': university_profile,
-        'university_weight':university_weight,
+        'university_weight': university_weight,
     }
 
-    return render(request,"university_panel/uni_profile.html", context)
+    return render(request, "university_panel/uni_profile.html", context)
 
 
 @user_type_required('university')
 def uni_faq(request):
-    return render(request,"university_panel/uni_faq.html")
+    return render(request, "university_panel/uni_faq.html")
 
 
 @user_type_required('university')
 def uni_support(request):
-    return render(request,"university_panel/uni_support.html")
+    return render(request, "university_panel/uni_support.html")
 
 
 @csrf_exempt
@@ -289,12 +283,3 @@ def toggle_flag(request):
     application.is_flagged = not application.is_flagged
     application.save()
     return JsonResponse({'is_flagged': application.is_flagged})
-
-
-
-
-
-
-
-
-

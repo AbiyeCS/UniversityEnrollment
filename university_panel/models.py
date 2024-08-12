@@ -1,8 +1,6 @@
 from django.db import models
 from authentication.models import *
 
-# Create your models here.
-
 
 class UniversityProfile(models.Model):
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)

@@ -3,13 +3,12 @@ import os
 import joblib
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
-from sapms import settings
-from university_panel.models import UniversityProfile, UniversityAIWeight
-from student_panel.models import Application
 from aiadmin.models import TrainingModel, FeedbackModel
-from sklearn.metrics import accuracy_score
+from sapms import settings
+from university_panel.models import UniversityAIWeight
 
 
 def collect_data():
@@ -32,11 +31,11 @@ def collect_data():
         'uni_gpa_weight', 'uni_sports_weight', 'uni_extracurricular_weight', 'accepted'
     ])
 
-
     # Drop rows with missing values
     df.dropna(inplace=True)
 
     return df
+
 
 def train_model():
     df = collect_data()
@@ -87,4 +86,3 @@ def create_feedback_entry(application, accepted_status):
         )
     except UniversityAIWeight.DoesNotExist:
         print(f"University weights not found for university: {application.university}")
-

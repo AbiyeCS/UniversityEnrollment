@@ -1,11 +1,6 @@
 from ckeditor.fields import RichTextField
-from django.db import models
 from authentication.models import *
 from university_panel.models import *
-from ckeditor_uploader.fields import RichTextUploadingField
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-
 
 
 class StudentProfile(models.Model):

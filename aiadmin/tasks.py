@@ -1,17 +1,18 @@
 from __future__ import absolute_import, unicode_literals
-from celery import shared_task
-from .ai_utils import train_model
-from sapms.celery import app
-from celery import shared_task
-import pandas as pd
-from .models import TrainingModel, FeedbackModel
-from django.conf import settings
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import joblib
+
 import os
 from decimal import Decimal
+
+import joblib
+import pandas as pd
+from celery import shared_task
+from django.conf import settings
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
+from .ai_utils import train_model
+from .models import TrainingModel, FeedbackModel
 
 
 @shared_task

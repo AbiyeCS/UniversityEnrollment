@@ -1,8 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
+from django.db import models
 
-# Create your models here.
 
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = (
@@ -21,7 +19,3 @@ class UserProfile(models.Model):
             return True
         return False
 
-#
-# class AdminProfile(models.Model):
-#     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
-#     # additional fields as needed

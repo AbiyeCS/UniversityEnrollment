@@ -2,17 +2,16 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.db.models import Q
-from django.forms import inlineformset_factory
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
+from authentication.permissions import user_type_required
 from university_panel.models import UniversityProfile, Course, UniversityQuestion
 from .forms import *
-# Create your views here.
-from .models import ApplicationQA, FAQ, Subject, ChatMessage
-from authentication.permissions import user_type_required
+from .models import ApplicationQA, FAQ, Subject, ChatMessage, Application, StudentProfile
 
 
 @user_type_required('student')

@@ -9,7 +9,7 @@ class TrainingModel(models.Model):
 
     def get_model_path(self):
         if self.model_path:
-            return self.model_path.split('sapms')[1]
+            return self.model_path.split('UniversityEnrollment')[1]
         else:
             return ""
 

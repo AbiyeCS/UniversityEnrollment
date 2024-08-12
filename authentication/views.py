@@ -7,7 +7,6 @@ from .forms import *
 from .models import *
 from student_panel.models import StudentProfile
 from university_panel.models import UniversityProfile
-# Create your views here.
 from django.views.decorators.cache import cache_control
 
 
@@ -15,21 +14,21 @@ def home(request):
     return redirect('login_user')
 
 
-@cache_control(no_cache=True, must_revalidate=True,no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def login(request):
     InvalidDetails = None
     user_auth = None
 
     form = LoginForm()
     if request.user.is_authenticated:
-            # check user type and redirect
-            if request.user.is_staff:
-                return HttpResponseRedirect('/admin_dashboard/')
-            if request.user.userprofile.user_type == 'student':
-                return HttpResponseRedirect('/student/dashboard/')
-            if request.user.userprofile.user_type == 'university':
-                return HttpResponseRedirect('/university/dashboard/')
-    return_url = request.GET.get('next',None)
+        # check user type and redirect
+        if request.user.is_staff:
+            return HttpResponseRedirect('/admin_dashboard/')
+        if request.user.userprofile.user_type == 'student':
+            return HttpResponseRedirect('/student/dashboard/')
+        if request.user.userprofile.user_type == 'university':
+            return HttpResponseRedirect('/university/dashboard/')
+    return_url = request.GET.get('next', None)
 
     print(request.POST)
     if request.method == 'POST':
@@ -117,13 +116,14 @@ def register(request):
                 messages.error(request, "only students/university can login right now")
                 return redirect('login_user')
         else:
-            print("user form",form.errors)
+            print("user form", form.errors)
             print(profile_form.errors)
             errors = form.errors
     else:
         form = SignUpForm()
         profile_form = ProfileForm()
-    return render(request, 'authentication/register.html', {'form': form, 'profile_form': profile_form,'errors':errors})
+    return render(request, 'authentication/register.html',
+                  {'form': form, 'profile_form': profile_form, 'errors': errors})
 
 
 def access_denied(request):
