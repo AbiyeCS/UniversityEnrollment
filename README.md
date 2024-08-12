@@ -1,5 +1,9 @@
 # How To Run #
 
+## Prerequisites ## 
+Before running the project, ensure you have the following installed: 
+- Python3: You can verify the installation by running $python3—version command
+
 ## To create virtual environment ###
     cd project 
     virtualenv venv
@@ -50,7 +54,7 @@ python manage.py runserver 8000
 - for seeing recommendations -> /admin_dashboard/all_recommendations/
 
 
-## To Access Database in PyCharm ## 
+## To access database in PyCharm ## 
 - Double click db.sqlite3 in the home directory 
 - Click apply 
 - Click Ok 
