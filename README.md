@@ -50,3 +50,8 @@ for seeing recommendations -> /admin_dashboard/all_recommendations/
 
 For you to see recommendations you have to set the initial weightage for a university in http://127.0.0.1:8000/admin/university_panel/universityaiweight/ 
 
+To Access Database in PyCharm 
+- Double click db.sqlite3 in the home directory 
+- Click apply 
+- Click Ok 
+- Then you should now see the database entries in the database tab to the right of this window (If)
