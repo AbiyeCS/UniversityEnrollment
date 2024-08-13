@@ -58,6 +58,9 @@ Before running the project, ensure you have the following installed:
 ## Demo - Upon initially starting application for the first time no recommendations will show ##
 - Login as admin
 - Add weights to all universities to see the recommendations - http://127.0.0.1:8000/admin/university_panel/universityaiweight/
+- Press Add University weight button in top right corner 
+- Select the university weighting you want to change from the dropdown menu 
+- The total weightage of GPA, Extracurricular and sport should equal 100 e.g GPA = 30, Extracurricular = 30 and Sports = 40. 
 - Once weights are added go to http://127.0.0.1:8000/admin_dashboard/all_recommendations/
 - Click Refresh Recommendation button and recommendations will now show
 
@@ -65,7 +68,7 @@ Before running the project, ensure you have the following installed:
 - Go to http://127.0.0.1:8000/admin_dashboard/model-training/
 - Choose file, dataset is in UniversityEnrollment/media/training_files
 - Click upload
-- If you get an error run “redis-server” and ensure that is running, then restart both of the celery terminals - If it’s still not working it may be because Firewall is blocking connection to Redis, you have to configure your firewall to Allow connections to the Redis server on the necessary port (’6379)
+- If you get an error run “redis-server” and ensure that is running, then restart both of the celery terminals - If it’s still not working it may be because Firewall is blocking connection to Redis, you have to configure your firewall to Allow connections to the Redis server on the necessary port (6379)
 
 ## To access database in PyCharm ## 
 - Double click db.sqlite3 in the home directory 
