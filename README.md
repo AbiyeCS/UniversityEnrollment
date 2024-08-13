@@ -53,7 +53,7 @@ Before running the project, ensure you have the following installed:
     rm celerybeat-schedule
     celery -A sapms beat --loglevel=info
 
-#### Note: You can also manually remove the celerybeat-schedule by deleting the file directly from the home directory ####
+#### Note: You can also manually remove the celerybeat-schedule by deleting the file directly from the home directory if it exists, if it doesn't can go straight to the second command of the two ####
 
 ## Demo - Upon starting applications no recommendations will show ##
 - Login as admin
