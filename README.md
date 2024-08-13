@@ -55,14 +55,11 @@ Before running the project, ensure you have the following installed:
 
 #### Note: You can also manually remove the celerybeat-schedule by deleting the file directly from the home directory if it exists, if it doesn't can go straight to the second command of the two ####
 
-## Demo - Upon starting applications no recommendations will show ##
+## Demo - Upon initially starting application for the first time no recommendations will show ##
 - Login as admin
 - Add weights to all universities to see the recommendations - http://127.0.0.1:8000/admin/university_panel/universityaiweight/
 - Once weights are added go to http://127.0.0.1:8000/admin_dashboard/all_recommendations/
-- Click Refresh Recommendation button and recommendations will show
-- For pre-training -> /admin_dashboard/model-training/
-- for seeing and deleting training data -> /admin_dashboard/training-data/
-- for seeing recommendations -> /admin_dashboard/all_recommendations/
+- Click Refresh Recommendation button and recommendations will now show
 
 ## To add a dataset/training data ##
 - Go to http://127.0.0.1:8000/admin_dashboard/model-training/
