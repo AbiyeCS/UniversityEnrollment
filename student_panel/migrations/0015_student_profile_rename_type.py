@@ -3,7 +3,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('student_panel', '0013_studentprofile_education_gpa_score'),
+        ('student_panel', '0014_studentprofile_intersted_extracurci_certification_and_more'),
     ]
 
     operations = [
