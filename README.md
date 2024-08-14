@@ -7,7 +7,9 @@ Before running the project, ensure you have the following installed:
 - Install Docker - https://www.docker.com/products/docker-desktop/ 
 
 ## Build docker containers ##
-    docker compose -f ./docker-compose.yml up -d
+```bash
+docker compose -f ./docker-compose.yml up -d
+```
 #### Run this command in the UniversityEnrollment directory
 
 ## Seeding data ##
@@ -15,11 +17,9 @@ Before running the project, ensure you have the following installed:
 - click on the Exec tab 
 - Run the following commands within this tab 
 
-
-
-
-
-    python manage.py seed_student
+```bash
+python manage.py seed_student
+```
 #### Note: This will create an admin user with "username=admin;password=password123" and 50 students "username=student_1;password=password123"
     python manage.py seed_university
 #### Note: This will create dummy 10 universities "username=dummyuser0:password=dummyuserpassword
