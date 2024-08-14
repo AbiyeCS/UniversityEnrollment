@@ -13,8 +13,10 @@ Before running the project, ensure you have the following installed:
 ## Seeding data ##
 - In docker click on sapms_django container
 - click on the Exec tab 
-- Run the following commands within this tab
-        
+- Run the following commands within this tab 
+
+
+
 
 
     python manage.py seed_student
