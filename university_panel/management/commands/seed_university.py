@@ -1,19 +1,29 @@
 import random
 from django.core.management.base import BaseCommand
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.contrib.auth.models import User
 from authentication.models import UserProfile
-from university_panel.models import UniversityProfile, UniversitySession, Discipline, Course, Fee
+from university_panel.models import UniversityProfile, UniversitySession, Discipline, Course, Fee, UniversityAIWeight
 
 class Command(BaseCommand):
     help = 'Seed the database with demo data'
 
     @transaction.atomic
     def handle(self, *args, **kwargs):
+        if self.check_existing_users():
+            self.stdout.write(self.style.ERROR('User(s) with the same username already exist. Stopping the seeding process.'))
+            return
+
         self.seed_disciplines()
         self.seed_universities()
         self.seed_courses()
         self.stdout.write(self.style.SUCCESS('Successfully seeded the database'))
+
+    def check_existing_users(self):
+        """Check if any users with the same username already exist."""
+        usernames = [f'dummyuser{i}' for i in range(10)]
+        existing_users = User.objects.filter(username__in=usernames)
+        return existing_users.exists()
 
     def seed_disciplines(self):
         disciplines = ['Computer Science', 'Business Administration', 'Mechanical Engineering',
@@ -70,7 +80,29 @@ class Command(BaseCommand):
                 start_date='2024-09-01',
                 application_deadline='2024-07-31'
             )
+
+            # Randomly assign weights that sum up to 100
+            weights = self.generate_weights()
+            UniversityAIWeight.objects.create(
+                university_profile=university,
+                gpa_weight=weights[0],
+                sports_interest_weight=weights[1],
+                extracurricular_interest_weight=weights[2]
+            )
+
         self.stdout.write(self.style.SUCCESS('Seeded Universities'))
+
+    def generate_weights(self):
+        # Generate two random cut points between 1 and 99
+        a = random.randint(1, 99)
+        b = random.randint(1, 99)
+
+        x, y = sorted([a, b])
+
+        weight1 = x
+        weight2 = y - x
+        weight3 = 100 - y
+        return [weight1, weight2, weight3]
 
     def seed_courses(self):
         course_names = [

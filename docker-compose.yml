@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: sapms_django
+    build:
+      context: .
+    entrypoint: bash
+    command: -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - 8004:8000
+    environment:
+      - DEBUG=1
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - POSTGRES_DB=sapms_db
+      - POSTGRES_USER=sapms_user
+      - POSTGRES_PASSWORD=sapms_password
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+      - celery_worker
+      - celery_beat
+      - postgres
+    networks:
+      - backend
+
+  redis:
+    container_name: sapms_redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - POSTGRES_DB=sapms_db
+      - POSTGRES_USER=sapms_user
+      - POSTGRES_PASSWORD=sapms_password
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    networks:
+      - backend
+
+  celery_worker:
+    container_name: sapms_celery_worker
+    build:
+      context: .
+    command: celery -A sapms worker --loglevel=info
+    volumes:
+      - .:/usr/src/app/
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - POSTGRES_DB=sapms_db
+      - POSTGRES_USER=sapms_user
+      - POSTGRES_PASSWORD=sapms_password
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - backend
+
+  celery_beat:
+    container_name: sapms_celery_beat
+    build:
+      context: .
+    command: celery -A sapms beat --loglevel=info
+    volumes:
+      - .:/usr/src/app/
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - POSTGRES_DB=sapms_db
+      - POSTGRES_USER=sapms_user
+      - POSTGRES_PASSWORD=sapms_password
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    depends_on:
+      - postgres
+      - redis
+      - celery_worker
+    networks:
+      - backend
+
+  postgres:
+    container_name: sapms_postgres
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=sapms_db
+      - POSTGRES_USER=sapms_user
+      - POSTGRES_PASSWORD=sapms_password
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+    driver: bridge
